@@ -4,6 +4,7 @@
 * @author Fvlaenix
 */
 //=============================================================================
+// v1.0
 
 Imported = Imported || {}
 Imported.Fvlaenix = new Set()
