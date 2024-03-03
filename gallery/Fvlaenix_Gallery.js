@@ -4,6 +4,9 @@
 * @author Fvlaenix
 */
 //=============================================================================
+// v1.1
+// - Added lock for gallery. Please, redefine Fvlaenix.Gallery.IS_GALLERY_SHOULD_BE_LOCKED_BY_DEFAULT below to make gallery showing all time
+//   Use Fvlaenix.Gallery.unlockGallery function or plugin command fvlaenix_gallery_unlock to unlock it if it is locked by default
 // v1.0
 
 Imported = Imported || {}
@@ -18,11 +21,43 @@ Fvlaenix.Gallery = {}
 Fvlaenix.Gallery.PART_LIST = 3.0 / 7
 Fvlaenix.Gallery.EMPTY_TOP = 1.0 / 8
 
-Fvlaenix.Gallery.IS_GALLERY_ACTIVE_SWITCH = 638
-Fvlaenix.Gallery.IS_SCENE_ENDED_SWITCH = 639
-Fvlaenix.Gallery.IS_SCENE_RUN = 640
+Fvlaenix.Gallery.IS_GALLERY_ACTIVE_SWITCH = 199
+Fvlaenix.Gallery.IS_SCENE_RUN = 200
 
-Fvlaenix.Gallery.GALLERY_SCENE_ID = 100
+Fvlaenix.Gallery.GALLERY_SCENE_ID = 40
+
+Fvlaenix.Gallery.IS_GALLERY_SHOULD_BE_LOCKED_BY_DEFAULT = true
+
+// ================== Gallery locking in menu
+
+Fvlaenix.Gallery.isGalleryLocked = function() {
+    const isManagerLock = ConfigManager.isGalleryLocked;
+    if (isManagerLock != null) {
+        return isManagerLock
+    } else {
+        return Fvlaenix.Gallery.IS_GALLERY_SHOULD_BE_LOCKED_BY_DEFAULT
+    }
+}
+
+Fvlaenix.Gallery.unlockGallery = function () {
+    ConfigManager.isGalleryLocked = false
+    ConfigManager.save()
+}
+
+Fvlaenix.Gallery.fvlaenixConfigDataMakeData_40328574095 = ConfigManager.makeData
+ConfigManager.makeData = function () {
+    let config = Fvlaenix.Gallery.fvlaenixConfigDataMakeData_40328574095.call(this);
+    config.isGalleryLocked = this.isGalleryLocked
+    return config
+}
+
+Fvlaenix.Gallery.fvlaenixConfigManagerApplyData_459846759874 = ConfigManager.applyData
+ConfigManager.applyData = function (config) {
+    Fvlaenix.Gallery.fvlaenixConfigManagerApplyData_459846759874.call(this, config)
+    this.isGalleryLocked = config['isGalleryLocked']
+}
+
+// ================== Gallery graphical items
 
 Fvlaenix.Gallery.TreeItem = class TreeItem {
     constructor(name, description) {
@@ -114,10 +149,10 @@ Fvlaenix.Gallery.WindowItemList = class WindowItemList extends Window_Selectable
 
     constructor(parent) {
         super(
-            0,
-            Graphics.height * Fvlaenix.Gallery.EMPTY_TOP,
-            Graphics.width * Fvlaenix.Gallery.PART_LIST,
-            Graphics.height * (1 - Fvlaenix.Gallery.EMPTY_TOP)
+          0,
+          Graphics.height * Fvlaenix.Gallery.EMPTY_TOP,
+          Graphics.width * Fvlaenix.Gallery.PART_LIST,
+          Graphics.height * (1 - Fvlaenix.Gallery.EMPTY_TOP)
         )
         this._fvlaparent = parent
         this.refresh()
@@ -155,10 +190,10 @@ Fvlaenix.Gallery.Window_Gallery_Description = class Window_Gallery_Description e
 
     constructor(parent, list) {
         super(
-            Graphics.width * Fvlaenix.Gallery.PART_LIST + 5,
-            Graphics.height * Fvlaenix.Gallery.EMPTY_TOP,
-            Graphics.width * (1 - Fvlaenix.Gallery.PART_LIST) - 5,
-            Graphics.height * (1 - Fvlaenix.Gallery.EMPTY_TOP)
+          Graphics.width * Fvlaenix.Gallery.PART_LIST + 5,
+          Graphics.height * Fvlaenix.Gallery.EMPTY_TOP,
+          Graphics.width * (1 - Fvlaenix.Gallery.PART_LIST) - 5,
+          Graphics.height * (1 - Fvlaenix.Gallery.EMPTY_TOP)
         )
         this._fvlaparent = parent
         this.list = list
@@ -304,6 +339,10 @@ Fvlaenix.Commands["fvlaenix_launch_battle_scene"] = function (game_interpreter, 
     game_interpreter._childInterpreter = child
 }
 
+Fvlaenix.Commands["fvlaenix_gallery_unlock"] = function (game_interpreter, args) {
+    Fvlaenix.Gallery.unlockGallery()
+}
+
 Window_MenuCommand.prototype.addGalleryCommand = function () {
     this.addCommand("Gallery", "gallery")
 }
@@ -322,14 +361,16 @@ Scene_Menu.prototype.createCommandWindow = function () {
 };
 
 Fvlaenix.Gallery.Window_MenuCommand_addGalleryCommands =
-    Window_MenuCommand.prototype.addOriginalCommands;
+  Window_MenuCommand.prototype.addOriginalCommands;
 Window_MenuCommand.prototype.addOriginalCommands = function () {
     Fvlaenix.Gallery.Window_MenuCommand_addGalleryCommands.call(this);
     this.addGalleryCommand();
 };
 
 Window_MenuCommand.prototype.addGalleryCommand = function () {
-    this.addCommand(TextManager.gallery, 'gallery', true);
+    if (!Fvlaenix.Gallery.isGalleryLocked()) {
+        this.addCommand(TextManager.gallery, 'gallery', true);
+    }
 };
 
 rose = function () {
