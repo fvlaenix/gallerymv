@@ -4,6 +4,8 @@
 * @author Fvlaenix
 */
 //=============================================================================
+// v1.2
+// - Add gallery to menu
 // v1.1
 // - Added lock for gallery. Please, redefine Fvlaenix.Gallery.IS_GALLERY_SHOULD_BE_LOCKED_BY_DEFAULT below to make gallery showing all time
 //   Use Fvlaenix.Gallery.unlockGallery function or plugin command fvlaenix_gallery_unlock to unlock it if it is locked by default
@@ -129,7 +131,7 @@ Fvlaenix.Gallery.Window = class Window extends Scene_MenuBase {
         this.list = new Fvlaenix.Gallery.WindowItemList(this._fvlaparent)
         this.addWindow(this.list)
         this.list.setHandler('ok', this.on_ok.bind(this))
-        this.list.setHandler('cancel', this.popScene.bind(this))
+        this.list.setHandler('cancel', this.on_cancel.bind(this))
         this.description = new Fvlaenix.Gallery.Window_Gallery_Description(this._fvlaparent, this.list)
         this.addWindow(this.description)
         this.refreshWindows()
@@ -137,6 +139,14 @@ Fvlaenix.Gallery.Window = class Window extends Scene_MenuBase {
 
     on_ok() {
         this._fvlaparent.activites[this.list.index()].run()
+    }
+
+    on_cancel() {
+        if (SceneManager._stack.length === 0) {
+            SceneManager.goto(Scene_Title)
+        } else {
+            SceneManager.pop()
+        }
     }
 
     refreshWindows() {
@@ -306,6 +316,8 @@ Fvlaenix.Gallery.dfs = function (node) {
     }
 }
 
+// =============== Commands
+
 Fvlaenix.Gallery.MAIN_GALLERY = new Fvlaenix.Gallery.Node(null, null)
 
 Fvlaenix.Commands["fvlaenix_launch_gallery"] = function (game_interpreter, args) {
@@ -343,9 +355,7 @@ Fvlaenix.Commands["fvlaenix_gallery_unlock"] = function (game_interpreter, args)
     Fvlaenix.Gallery.unlockGallery()
 }
 
-Window_MenuCommand.prototype.addGalleryCommand = function () {
-    this.addCommand("Gallery", "gallery")
-}
+// =================== Add to game menu
 
 Scene_Menu.prototype.commandGallery = function () {
     Fvlaenix.Gallery.MAIN_GALLERY.run()
@@ -372,6 +382,34 @@ Window_MenuCommand.prototype.addGalleryCommand = function () {
         this.addCommand(TextManager.gallery, 'gallery', true);
     }
 };
+
+// ===================== Add to main menu
+
+Fvlaenix.Gallery.SceneTitleCreateCommandWindow_90348756495 = Scene_Title.prototype.createCommandWindow
+Scene_Title.prototype.createCommandWindow = function() {
+    Fvlaenix.Gallery.SceneTitleCreateCommandWindow_90348756495.call(this)
+    this._commandWindow.setHandler('gallery', this.commandGallery.bind(this));
+}
+
+Scene_Title.prototype.commandGallery = function() {
+    TouchInput.clear();
+    Input.clear();
+    Fvlaenix.Gallery.MAIN_GALLERY.run()
+}
+
+Window_TitleCommand.prototype.addGalleryCommand = function() {
+    if (!Fvlaenix.Gallery.isGalleryLocked()) {
+        this.addCommand(TextManager.gallery, 'gallery', true);
+    }
+}
+
+Fvlaenix.Gallery.WindowTitleCommandMakeCommandList_804754035480 = Window_TitleCommand.prototype.makeCommandList
+Window_TitleCommand.prototype.makeCommandList = function() {
+    Fvlaenix.Gallery.WindowTitleCommandMakeCommandList_804754035480.call(this)
+    this.addGalleryCommand()
+}
+
+// ======================== Implementation
 
 rose = function () {
     const rose = new Fvlaenix.Gallery.Node("Rose", "TODO")
