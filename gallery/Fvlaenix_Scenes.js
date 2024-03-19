@@ -44,42 +44,42 @@ Fvlaenix.Scenes.CallableScene = class CallableScene {
 
     before(game_interpreter) {
         Fvlaenix.Commands.addToEnd(
-            game_interpreter,
-            [
-                {"code": 221, "indent": 0, "parameters": []},
-                {"code": 230, "indent": 0, "parameters": [30]}
-            ]
+          game_interpreter,
+          [
+              {"code": 221, "indent": 0, "parameters": []},
+              {"code": 230, "indent": 0, "parameters": [30]}
+          ]
         )
         this.layers.forEach(item => {
             item.before(game_interpreter)
         })
         Fvlaenix.Commands.addToEnd(
-            game_interpreter,
-            [
-                {"code": 222, "indent": 0, "parameters": []},
-                {"code": 230, "indent": 0, "parameters": [30]}
-            ]
+          game_interpreter,
+          [
+              {"code": 222, "indent": 0, "parameters": []},
+              {"code": 230, "indent": 0, "parameters": [30]}
+          ]
         )
     }
 
     after(game_interpreter) {
         Fvlaenix.Commands.addToEnd(
-            game_interpreter,
-            [
-                {"code": 221, "indent": 0, "parameters": []},
-                {"code": 230, "indent": 0, "parameters": [30]}
-            ]
+          game_interpreter,
+          [
+              {"code": 221, "indent": 0, "parameters": []},
+              {"code": 230, "indent": 0, "parameters": [30]}
+          ]
         )
         this.layers.forEach(item => {
             item.after(game_interpreter)
         })
         Fvlaenix.Commands.addToEnd(
-            game_interpreter,
-            [
-                {"code": 222, "indent": 0, "parameters": []},
-                {"code": 230, "indent": 0, "parameters": [30]},
-                {"code": 0, "indent": 0, "parameters": []},
-            ]
+          game_interpreter,
+          [
+              {"code": 222, "indent": 0, "parameters": []},
+              {"code": 230, "indent": 0, "parameters": [30]},
+              {"code": 0, "indent": 0, "parameters": []},
+          ]
         )
     }
 
@@ -175,19 +175,19 @@ Fvlaenix.Scenes.BattleScene = class BattleScene extends Fvlaenix.Scenes.Teleport
 
     call_battle(game_interpreter) {
         Fvlaenix.Commands.addToEnd(
-            game_interpreter,
-            [
-                {"code": 313, "indent": 0, "parameters": [0, 0, 0, 3]}
-            ]
+          game_interpreter,
+          [
+              {"code": 313, "indent": 0, "parameters": [0, 0, 0, 3]}
+          ]
         )
         Fvlaenix.Commands.addToEndEvent(game_interpreter, this.callable)
         Fvlaenix.Commands.addToEnd(
-            game_interpreter,
-            [
-                {"code": 313, "indent": 0, "parameters": [0, 0, 1, 3]},
-                {"code": 340, "indent": 0, "parameters": []}
+          game_interpreter,
+          [
+              {"code": 313, "indent": 0, "parameters": [0, 0, 1, 3]},
+              {"code": 340, "indent": 0, "parameters": []}
 
-            ]
+          ]
         )
     }
 
@@ -223,10 +223,10 @@ Fvlaenix.Scenes.BattleScene = class BattleScene extends Fvlaenix.Scenes.Teleport
         }
         $dataTroops.push(newTroop)
         Fvlaenix.Commands.addToEnd(
-            game_interpreter,
-            [
-                {"code": 301, "indent": 0, "parameters": [0, $dataTroops.length - 1, false, false]}
-            ]
+          game_interpreter,
+          [
+              {"code": 301, "indent": 0, "parameters": [0, $dataTroops.length - 1, false, false]}
+          ]
         )
         Fvlaenix.Scenes.Battle = this
     }
