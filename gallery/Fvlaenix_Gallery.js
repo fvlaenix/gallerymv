@@ -408,13 +408,3 @@ Window_TitleCommand.prototype.makeCommandList = function() {
     Fvlaenix.Gallery.WindowTitleCommandMakeCommandList_804754035480.call(this)
     this.addGalleryCommand()
 }
-
-// ======================== Implementation
-
-rose = function () {
-    const rose = new Fvlaenix.Gallery.Node("Rose", "TODO")
-
-    Fvlaenix.Gallery.MAIN_GALLERY.add_node(rose)
-}
-
-rose()
