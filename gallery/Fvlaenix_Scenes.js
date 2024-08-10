@@ -150,6 +150,14 @@ Fvlaenix.Scenes.TeleportRecoveryCallableScene.TeleportLayer = class TeleportLaye
 
     after(game_interpreter) {
         new Fvlaenix.PlayerPosition(this.map_id, this.player_x, this.player_y, this.player_direction).teleportPlayer(game_interpreter)
+        if (Fvlaenix.RichGallery !== null && Fvlaenix.RichGallery !== undefined) {
+            if (Fvlaenix.RichGallery.IS_FROM_MENU) {
+                Fvlaenix.Commands.addToEnd(
+                  game_interpreter,
+                  [{"code": 355, "indent": 0, "parameters": ["SceneManager.goto(Scene_Title)"]}]
+                )
+            }
+        }
     }
 }
 
@@ -158,6 +166,17 @@ Fvlaenix.Scenes.MapEventScene = class MapEventScene extends Fvlaenix.Scenes.Tele
     constructor(id, name, description, player_position, event) {
         super(id, name, description, player_position);
         this.event = event
+    }
+
+    _run(game_interpreter) {
+        this.event.call(game_interpreter)
+    }
+}
+
+Fvlaenix.Scenes.RichMapEventScene = class RichMapEventScene extends Fvlaenix.Scenes.TeleportRecoveryCallableScene {
+    constructor(player_position, event) {
+        super(null, null, null, player_position);
+        this.event = event;
     }
 
     _run(game_interpreter) {

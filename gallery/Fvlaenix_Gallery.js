@@ -23,12 +23,12 @@ Fvlaenix.Gallery = {}
 Fvlaenix.Gallery.PART_LIST = 3.0 / 7
 Fvlaenix.Gallery.EMPTY_TOP = 1.0 / 8
 
-Fvlaenix.Gallery.IS_GALLERY_ACTIVE_SWITCH = 199
+Fvlaenix.Gallery.IS_GALLERY_ACTIVE_SWITCH = 1081
 Fvlaenix.Gallery.IS_SCENE_RUN = 200
 
-Fvlaenix.Gallery.GALLERY_SCENE_ID = 40
+Fvlaenix.Gallery.GALLERY_SCENE_ID = 399
 
-Fvlaenix.Gallery.IS_GALLERY_SHOULD_BE_LOCKED_BY_DEFAULT = true
+Fvlaenix.Gallery.IS_GALLERY_SHOULD_BE_LOCKED_BY_DEFAULT = false
 
 // ================== Gallery locking in menu
 
@@ -330,6 +330,9 @@ Fvlaenix.Commands["fvlaenix_launch_gallery"] = function (game_interpreter, args)
     }], 0)
     child.setup([{"code": 0, "indent": 0, "parameters": []}], 0)
     $gameVariables.value(Fvlaenix.Gallery.GALLERY_SCENE_ID).run(child)
+    if (Fvlaenix.RichGallery !== null && Fvlaenix.RichGallery !== undefined) {
+        Fvlaenix.RichGallery.IS_FROM_MENU = false
+    }
     while (child._parentInterpreter != null) {
         child = child._parentInterpreter
     }
